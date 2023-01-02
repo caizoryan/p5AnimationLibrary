@@ -34,11 +34,10 @@ class Prop {
     if (!this.isActive) return;
     // set motion as current keyframe
     let motion = this.keyframes[this.activeMotion];
-
     // check if elapsed time is more than animation duration
     if (this.elapsedTime >= motion.duration) {
       // check which keyframe we are at, if there is more after this, continue, else stop
-      if (this.activeMotion < motion.length - 1) {
+      if (this.activeMotion < this.keyframes.length - 1) {
         this.activeMotion++;
         this.elapsedTime = 0;
       } else {
@@ -53,7 +52,7 @@ class Prop {
 
     // add time to elapsed time
     this.elapsedTime += deltaTime;
-
+    motion = this.keyframes[this.activeMotion];
     // calculate progress
     let progress = this.elapsedTime / motion.duration;
     let start = motion.start;
