@@ -1,5 +1,5 @@
 class Prop {
-  constructor(start, end, duration, easing = "InOutQuad") {
+  constructor(start, end, duration, easing = "Linear") {
     this.isActive = false;
     this.isLooping = false;
     this.keyframes = []; // all the keyframes are stored here
@@ -98,7 +98,7 @@ class Prop {
 }
 
 class PropObject extends Prop {
-  constructor(obj, key, end, duration, easing = "InOutQuad") {
+  constructor(obj, key, end, duration, easing = "Linear") {
     super(obj[key], end, duration, easing);
     this.obj = obj;
     this.key = key;
@@ -114,22 +114,22 @@ class PropObject extends Prop {
   }
 }
 
-class PropKeyframes extends Prop {
-  constructor(obj, key, keyframes, easing = "InOutQuad") {
-    super(obj[key], keyframes[0][0], keyframes[0][1], easing);
+class PropKeyframes extends PropObject {
+  constructor(obj, key, keyframes, easing = "Linear") {
+    if (keyframes[0].length === 2)
+      super(obj, key, keyframes[0][0], keyframes[0][1], easing);
+    if (keyframes[0].length === 3)
+      super(obj, key, keyframes[0][0], keyframes[0][1], keyframes[0][2]);
     this.obj = obj;
     this.key = key;
-    for (let i = 1; i < keyframes.length; i++) {
-      this.add(keyframes[i][0], keyframes[i][1], easing);
-    }
+    this.addKeyframes(keyframes, easing);
   }
-  update() {
-    if (!this.runChecks()) return;
-
-    // add time to elapsed time
-    this.elapsedTime += deltaTime;
-
-    // update the animation
-    this.obj[this.key] = this.calculate(this.keyframes[this.activeMotion]);
+  addKeyframes(keyframes, easing) {
+    for (let i = 1; i < keyframes.length; i++) {
+      if (keyframes[i].length === 2)
+        this.add(keyframes[i][0], keyframes[i][1], easing);
+      if (keyframes[i].length === 3)
+        this.add(keyframes[i][0], keyframes[i][1], keyframes[i][2]);
+    }
   }
 }
