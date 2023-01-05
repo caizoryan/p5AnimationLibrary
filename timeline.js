@@ -23,4 +23,10 @@ class Timeline {
       x.setEasing(easing);
     }
   }
+  update() {
+    for (const x of this.props) {
+      x.update();
+    }
+    return this;
+  }
 }

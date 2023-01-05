@@ -9,28 +9,31 @@ function setup() {
   tl = new Timeline();
   // pass new prop an object, with key, and animation. in library instead of using the local variable, jsut write directly to reference.
   // create objects for properties we wanna animate
-  x = new Prop(100, 500, 2000); // if easing is not provided, default will be applied
-  y = new Prop(50, 500, 2000); // easing is specified: InOutQuint
   frameRate(30);
-  pp = new PropObject(a, "x", 500, 1000);
-  pp.add(200, 1000);
   // add keyframes
-  y.add(290, 2000)
-    .add(height - 100, 2000)
-    .add(50, 2000);
+  let pp = new PropKeyframes(a, "x", [
+    [random(0, width), 800],
+    [random(0, width), 900],
+    [random(0, width), 1000],
+    [200, 600],
+  ]);
+  let titi = new PropKeyframes(a, "y", [
+    [random(0, height), 1000],
+    [random(0, height), 1000],
+    [random(0, height), 1000],
+    [300, 1000],
+  ]);
 
-  tl.add(y).add(pp).animate().loop().setEasing("InOutQuint");
-  // loop the properties and animate
+  tl.add(pp).add(titi).animate().loop().setEasing("InOutQuad");
+  noStroke();
 }
 
 function draw() {
   // update every draw frame
-  x.update();
-  y.update();
-  pp.update();
+  tl.update();
   background(0, 126);
   fill(255);
 
   // refer to them in drawing of circle
-  circle(a.x, y.val(), 50);
+  circle(a.x, a.y, 50);
 }
